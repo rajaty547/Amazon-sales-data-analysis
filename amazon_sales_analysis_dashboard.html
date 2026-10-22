@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amazon Sales Analysis Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#172033;--muted:#667085;--line:#e5e9f0;--navy:#172b4d;--blue:#377dff;--teal:#14b8a6;--orange:#f59e0b;--red:#ef476f;--purple:#8067dc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#14213d,#23395d 65%,#176b87);color:#fff;padding:26px clamp(18px,4vw,48px) 22px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:10px;font-weight:800;color:#9bd8e5}
+h1{font-size:clamp(25px,3vw,36px);letter-spacing:-.04em;margin:6px 0 5px}.subtitle{color:#c8d4e4;margin:0}
+.header-tag{padding:8px 12px;border:1px solid #ffffff40;border-radius:999px;color:#e7f6fb;font-size:12px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.controls label{display:flex;align-items:center;gap:8px;color:#d7e2ef;font-size:12px}
+select{background:#ffffff15;border:1px solid #ffffff40;color:white;border-radius:9px;padding:9px 32px 9px 10px;font:inherit;max-width:260px}
+select option{color:#172033;background:white}
+main{max-width:1500px;margin:auto;padding:24px clamp(14px,3vw,40px) 40px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:3px 0 14px}
+.section-head h2{font-size:16px;margin:0;letter-spacing:-.02em}.small{color:var(--muted);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:13px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 3px 12px #243b5308;min-width:0}
+.kpi-top{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.kpi-value{font-size:clamp(19px,2vw,27px);font-weight:800;letter-spacing:-.045em;margin-top:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-foot{font-size:11px;color:var(--muted);margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0;box-shadow:0 3px 12px #243b5308}
+.card h3{font-size:14px;margin:0 0 3px;letter-spacing:-.015em}.desc{font-size:11px;color:var(--muted);margin-bottom:14px}
+.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+.chart-wrap{position:relative;height:290px}.chart-wrap.short{height:235px}.chart-wrap.tall{height:340px}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 17px}.tab{border:1px solid var(--line);background:white;color:var(--muted);padding:9px 14px;border-radius:9px;font-weight:700;cursor:pointer}.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.panel[hidden]{display:none!important}
+.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th{color:var(--muted);font-weight:700;background:#f8fafc}th:first-child,td:first-child{text-align:left}tbody tr:hover{background:#f8fbff}
+.pill{display:inline-block;border-radius:999px;padding:4px 8px;background:#e7f7f4;color:#087e70;font-size:10px;font-weight:800}
+footer{color:var(--muted);font-size:11px;padding:10px 2px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.span-3,.span-4,.span-5,.span-7,.span-8{grid-column:span 6}}
+@media(max-width:650px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kpi{padding:13px}.grid{gap:10px}.span-3,.span-4,.span-5,.span-6,.span-7,.span-8,.span-12{grid-column:span 12}.chart-wrap{height:260px}header{padding-top:21px}.header-tag{display:none}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top">
+  <div><div class="eyebrow">Commerce intelligence · Sales performance</div><h1>Amazon Sales Analysis</h1><p class="subtitle" id="subtitle">A clear view of revenue, profitability and product performance.</p></div>
+  <div class="header-tag">● Interactive report&nbsp; · &nbsp;100 orders</div>
+ </div>
+ <div class="controls">
+  <label>Region <select id="region"><option value="">All regions</option></select></label>
+  <label>Sales channel <select id="channel"><option value="">All channels</option></select></label>
+  <label>Year <select id="year"><option value="">All years</option></select></label>
+ </div>
+</header>
+<main>
+ <div class="section-head"><h2>Performance snapshot</h2><span class="small" id="filtered-count">100 orders in view</span></div>
+ <section class="kpis" id="kpis"></section>
+ <div class="tabs" role="tablist">
+  <button class="tab active" data-tab="overview">Overview</button><button class="tab" data-tab="trends">Sales trends</button><button class="tab" data-tab="products">Product analysis</button><button class="tab" data-tab="details">Data table</button>
+ </div>
+ <section class="panel" id="panel-overview">
+  <div class="grid">
+   <article class="card span-7"><h3>Revenue by region</h3><div class="desc">Which regions contribute the most revenue?</div><div class="chart-wrap"><canvas id="regionChart"></canvas></div></article>
+   <article class="card span-5"><h3>Revenue mix by sales channel</h3><div class="desc">Share of revenue from online and offline orders.</div><div class="chart-wrap"><canvas id="channelChart"></canvas></div></article>
+   <article class="card span-6"><h3>Profit by item type</h3><div class="desc">Ranked by total profit.</div><div class="chart-wrap"><canvas id="profitChart"></canvas></div></article>
+   <article class="card span-6"><h3>Top 10 countries by units sold</h3><div class="desc">Highest-volume markets in the selected view.</div><div class="chart-wrap"><canvas id="countryChart"></canvas></div></article>
+  </div>
+ </section>
+ <section class="panel" id="panel-trends" hidden>
+  <div class="grid">
+   <article class="card span-8"><h3>Units sold by year</h3><div class="desc">Annual unit volume across orders.</div><div class="chart-wrap"><canvas id="yearChart"></canvas></div></article>
+   <article class="card span-4"><h3>Cost vs. profit</h3><div class="desc">Overall cost and profit mix.</div><div class="chart-wrap"><canvas id="costProfitChart"></canvas></div></article>
+   <article class="card span-6"><h3>Revenue by item type</h3><div class="desc">Revenue contribution across product categories.</div><div class="chart-wrap"><canvas id="itemRevenueChart"></canvas></div></article>
+   <article class="card span-6"><h3>Orders by priority</h3><div class="desc">Order count split by priority and channel.</div><div class="chart-wrap"><canvas id="priorityChart"></canvas></div></article>
+  </div>
+ </section>
+ <section class="panel" id="panel-products" hidden>
+  <div class="grid">
+   <article class="card span-6"><h3>Cost by item type</h3><div class="desc">Total cost ranked by product category.</div><div class="chart-wrap"><canvas id="itemCostChart"></canvas></div></article>
+   <article class="card span-6"><h3>Profit margin by item type</h3><div class="desc">Profit as a share of revenue.</div><div class="chart-wrap"><canvas id="marginChart"></canvas></div></article>
+   <article class="card span-12"><h3>Item type performance</h3><div class="desc">Units, revenue, cost, profit and margin for each category.</div><div class="table-wrap"><table id="itemTable"></table></div></article>
+  </div>
+ </section>
+ <section class="panel" id="panel-details" hidden>
+  <article class="card"><h3>Order-level data</h3><div class="desc">Filtered records from the embedded dataset.</div><div class="table-wrap"><table id="ordersTable"></table></div></article>
+ </section>
+ <footer><span>Source: Amazon Sales sample data embedded in the provided HTML · 100 order records</span><span>Currency symbol shown as in the source dashboard; verify source currency before external use.</span></footer>
+</main>
+<script>
+const D={"r":["Asia","Australia and Oceania","Central America and the Caribbean","Europe","Middle East and North Africa","North America","Sub-Saharan Africa"],"c":["Albania","Angola","Australia","Austria","Azerbaijan","Bangladesh","Belize","Brunei","Bulgaria","Burkina Faso","Cameroon","Cape Verde","Comoros","Costa Rica","Cote d'Ivoire","Democratic Republic of the Congo","Djibouti","East Timor","Federated States of Micronesia","Fiji","France","Gabon","Grenada","Haiti","Honduras","Iceland","Iran","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Lebanon","Lesotho","Libya","Lithuania","Macedonia","Madagascar","Malaysia","Mali","Mauritania","Mexico","Moldova ","Monaco","Mongolia","Mozambique","Myanmar","New Zealand","Nicaragua","Niger","Norway","Pakistan","Portugal","Republic of the Congo","Romania","Russia","Rwanda","Samoa ","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Sierra Leone","Slovakia","Slovenia","Solomon Islands","South Sudan","Spain","Sri Lanka","Switzerland","Syria","The Gambia","Turkmenistan","Tuvalu","United Kingdom","Zambia"],"i":["Baby Food","Beverages","Cereal","Clothes","Cosmetics","Fruits","Household","Meat","Office Supplies","Personal Care","Snacks","Vegetables"],"s":["Offline","Online"],"p":["C","H","L","M"],"d":[[1,73,0,0,1,2010,9925,255.28,159.42],[2,22,2,1,0,2012,2804,205.7,117.11],[3,55,8,0,2,2014,1779,651.21,524.96],[6,59,5,1,0,2014,8102,9.33,6.92],[6,56,8,0,2,2013,5062,651.21,524.96],[1,65,0,1,0,2015,2974,255.28,159.42],[6,1,6,0,3,2011,4187,668.27,502.54],[6,9,11,1,1,2012,8082,154.06,90.93],[6,53,9,0,3,2015,6070,81.73,56.67],[6,61,2,1,1,2014,6593,205.7,117.11],[0,30,11,1,1,2011,124,154.06,90.93],[6,11,3,0,1,2014,4168,109.28,35.84],[0,5,3,1,2,2017,8263,109.28,35.84],[2,24,6,0,1,2017,8974,668.27,502.54],[0,44,9,0,0,2014,4901,81.73,56.67],[3,8,3,1,3,2012,1673,109.28,35.84],[0,68,4,0,3,2016,6952,437.2,263.33],[6,10,1,0,0,2015,5430,47.45,31.79],[0,72,6,0,2,2010,3830,668.27,502.54],[1,17,7,1,2,2012,5908,421.89,364.69],[3,50,0,1,2,2014,7450,255.28,159.42],[3,52,0,1,1,2015,1273,255.28,159.42],[2,24,10,1,2,2016,2225,152.58,97.44],[1,47,5,1,1,2014,2187,9.33,6.92],[3,42,9,1,2,2016,5070,81.73,56.67],[3,20,4,1,1,2017,1815,437.2,263.33],[1,28,5,1,3,2014,5398,9.33,6.92],[6,39,5,1,2,2010,5822,9.33,6.92],[3,50,1,0,0,2014,5124,47.45,31.79],[6,71,6,0,2,2012,2370,668.27,502.54],[3,69,4,0,3,2012,8661,437.2,263.33],[6,66,9,0,0,2013,2125,81.73,56.67],[1,2,8,1,0,2015,2924,651.21,524.96],[0,46,6,0,1,2015,8250,668.27,502.54],[6,16,10,1,3,2017,7327,152.58,97.44],[2,13,9,0,2,2017,6409,81.73,56.67],[4,70,5,1,2,2011,3784,9.33,6.92],[6,71,7,1,3,2017,4767,421.89,364.69],[0,7,8,1,2,2012,6708,651.21,524.96],[3,8,8,1,3,2012,3987,651.21,524.96],[6,49,9,1,1,2017,3015,81.73,56.67],[4,4,4,1,3,2010,7234,437.2,263.33],[6,71,2,0,1,2012,2117,205.7,117.11],[3,63,11,1,1,2012,171,154.06,90.93],[0,46,3,1,1,2015,5930,109.28,35.84],[6,12,2,0,1,2016,962,205.7,117.11],[3,25,4,1,0,2016,8867,437.2,263.33],[3,69,9,1,3,2010,273,81.73,56.67],[3,36,3,0,0,2014,7842,109.28,35.84],[6,40,8,0,0,2012,1266,651.21,524.96],[3,0,3,1,0,2010,2269,109.28,35.84],[6,33,5,1,2,2013,9606,9.33,6.92],[4,60,2,1,3,2013,4063,205.7,117.11],[6,62,8,0,3,2011,3457,651.21,524.96],[6,59,5,0,1,2013,7637,9.33,6.92],[6,14,3,1,0,2012,3482,109.28,35.84],[1,19,3,0,0,2010,9905,109.28,35.84],[3,3,4,0,1,2015,2847,437.2,263.33],[3,74,6,1,2,2012,282,668.27,502.54],[6,16,4,0,1,2014,7215,437.2,263.33],[1,2,2,0,1,2013,682,205.7,117.11],[3,58,0,1,2,2013,4750,255.28,159.42],[6,10,8,1,3,2011,5518,651.21,524.96],[4,34,3,0,1,2010,6116,109.28,35.84],[2,23,4,0,1,2013,1705,437.2,263.33],[6,56,4,0,1,2013,4477,437.2,263.33],[6,21,9,0,2,2012,8656,81.73,56.67],[2,6,3,0,3,2016,5498,109.28,35.84],[3,35,8,0,1,2010,8287,651.21,524.96],[6,37,3,0,2,2015,7342,109.28,35.84],[0,72,8,1,3,2013,5010,651.21,524.96],[4,34,5,1,2,2015,673,9.33,6.92],[6,15,1,1,0,2011,5741,47.45,31.79],[6,16,2,1,1,2017,8656,205.7,117.11],[4,51,4,0,2,2013,9892,437.2,263.33],[5,41,6,0,0,2014,6954,668.27,502.54],[1,18,1,1,0,2014,9379,47.45,31.79],[0,31,11,0,0,2011,3732,154.06,90.93],[3,43,0,0,1,2012,8614,255.28,159.42],[1,57,4,1,1,2013,9654,437.2,263.33],[3,67,6,0,2,2012,4513,668.27,502.54],[4,32,3,1,2,2012,7884,109.28,35.84],[4,26,4,1,1,2016,6489,437.2,263.33],[6,75,10,1,2,2011,4085,152.58,97.44],[6,27,11,1,2,2012,6457,154.06,90.93],[5,41,9,0,2,2012,6422,81.73,56.67],[6,59,1,0,0,2011,8829,47.45,31.79],[6,71,0,0,3,2014,5559,255.28,159.42],[4,29,5,1,3,2012,522,9.33,6.92],[3,64,1,0,0,2016,4660,47.45,31.79],[6,62,8,0,1,2016,948,651.21,524.96],[1,2,1,0,1,2014,9389,47.45,31.79],[4,4,8,1,3,2012,2021,651.21,524.96],[3,54,4,1,1,2010,7910,437.2,263.33],[2,48,1,0,0,2011,8156,47.45,31.79],[6,39,3,1,3,2011,888,109.28,35.84],[0,38,5,0,2,2011,6267,9.33,6.92],[6,62,11,0,0,2016,1485,154.06,90.93],[5,41,9,0,3,2015,5767,81.73,56.67],[6,45,6,0,2,2012,5367,668.27,502.54]],"range":["Feb 2010","May 2017"]};
+const priorityName={C:"Critical",H:"High",L:"Low",M:"Medium"};
+const colors=["#377dff","#14b8a6","#f59e0b","#8067dc","#ef476f","#5b8c5a","#2f9eaa","#d9694a","#4e6fb5","#9a5f8e","#7c8f3b","#8a6e5a"];
+const $=id=>document.getElementById(id);
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const number=n=>Math.round(n).toLocaleString("en-US");
+const pct=n=>n.toFixed(1)+"%";
+const records=D.d.map((x,index)=>({id:index+1,region:D.r[x[0]],country:D.c[x[1]].trim(),item:D.i[x[2]],channel:D.s[x[3]],priority:priorityName[D.p[x[4]]],year:x[5],units:x[6],unitPrice:x[7],unitCost:x[8],revenue:x[6]*x[7],cost:x[6]*x[8],profit:x[6]*(x[7]-x[8])}));
+let charts={};
+function fillSelect(id,values){$(id).innerHTML+=[...new Set(values)].sort((a,b)=>String(a).localeCompare(String(b))).map(v=>`<option value="${v}">${v}</option>`).join("")}
+fillSelect("region",D.r);fillSelect("channel",D.s);fillSelect("year",[...new Set(records.map(r=>r.year))]);
+function filtered(){return records.filter(r=>(!$("region").value||r.region===$("region").value)&&(!$("channel").value||r.channel===$("channel").value)&&(!$("year").value||r.year===+$("year").value))}
+function sum(a,k){return a.reduce((t,x)=>t+x[k],0)}
+function group(a,key,metric){const m=new Map();a.forEach(x=>m.set(x[key],(m.get(x[key])||0)+metric(x)));return [...m.entries()].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value)}
+function destroyCharts(){Object.values(charts).forEach(c=>c.destroy());charts={}}
+function chart(id,type,labels,datasets,opts={}){if(charts[id])charts[id].destroy();charts[id]=new Chart($(id),{type,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,boxWidth:8,font:{size:11}}},tooltip:{enabled:true}},...opts}})}
+const baseAxis={x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{font:{size:10}}}};
+function render(){
+ const a=filtered(),units=sum(a,"units"),revenue=sum(a,"revenue"),cost=sum(a,"cost"),profit=sum(a,"profit"),margin=revenue?profit/revenue*100:0;
+ $("filtered-count").textContent=`${a.length} orders in view`;
+ $("kpis").innerHTML=[
+  ["Units sold",number(units),"#377dff","Across selected orders"],
+  ["Total revenue",money(revenue),"#14b8a6","Sales value"],
+  ["Total cost",money(cost),"#98a2b3","Estimated product cost"],
+  ["Total profit",money(profit),"#f59e0b","Revenue less cost"],
+  ["Profit margin",pct(margin),"#8067dc","Profit / revenue"],
+  ["Orders",number(a.length),"#ef476f","Matching records"]
+ ].map(([label,value,color,foot])=>`<article class="kpi"><div class="kpi-top">${label}<span class="dot" style="background:${color}"></span></div><div class="kpi-value">${value}</div><div class="kpi-foot">${foot}</div></article>`).join("");
+ destroyCharts();
+ const regions=group(a,"region",x=>x.revenue).reverse();
+ chart("regionChart","bar",regions.map(x=>x.label),[{label:"Revenue",data:regions.map(x=>x.value),backgroundColor:"#377dff",borderRadius:5}],{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{callback:v=>"$"+(v/1000000).toFixed(1)+"M"}},y:{grid:{display:false}}}});
+ const channels=group(a,"channel",x=>x.revenue);
+ chart("channelChart","doughnut",channels.map(x=>x.label),[{data:channels.map(x=>x.value),backgroundColor:["#377dff","#14b8a6"],borderWidth:0,hoverOffset:7}],{cutout:"68%",plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:c=>`${c.label}: ${money(c.raw)}`}}}});
+ const items=group(a,"item",x=>x.profit);
+ chart("profitChart","bar",items.map(x=>x.label),[{label:"Profit",data:items.map(x=>x.value),backgroundColor:"#f59e0b",borderRadius:4}],{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{callback:v=>"$"+(v/1000).toFixed(0)+"K"}},y:{grid:{display:false}}}});
+ const countries=group(a,"country",x=>x.units).slice(0,10).reverse();
+ chart("countryChart","bar",countries.map(x=>x.label),[{label:"Units sold",data:countries.map(x=>x.value),backgroundColor:"#14b8a6",borderRadius:4}],{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#edf0f5"}},y:{grid:{display:false}}}});
+ const years=group(a,"year",x=>x.units).sort((x,y)=>x.label-y.label);
+ chart("yearChart","line",years.map(x=>x.label),[{label:"Units sold",data:years.map(x=>x.value),borderColor:"#377dff",backgroundColor:"#377dff22",fill:true,tension:.3,pointRadius:3}],{plugins:{legend:{display:false}},scales:baseAxis});
+ chart("costProfitChart","doughnut",["Cost","Profit"],[{data:[cost,profit],backgroundColor:["#98a2b3","#f59e0b"],borderWidth:0}],{cutout:"68%",plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:c=>`${c.label}: ${money(c.raw)}`}}}});
+ const itemRev=group(a,"item",x=>x.revenue).reverse();
+ chart("itemRevenueChart","bar",itemRev.map(x=>x.label),[{label:"Revenue",data:itemRev.map(x=>x.value),backgroundColor:"#377dff",borderRadius:4}],{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{callback:v=>"$"+(v/1000).toFixed(0)+"K"}},y:{grid:{display:false}}}});
+ const prios=["Critical","High","Medium","Low"];
+ const pData=["Offline","Online"].map((channel,i)=>({label:channel,data:prios.map(p=>a.filter(x=>x.channel===channel&&x.priority===p).length),backgroundColor:i?"#14b8a6":"#377dff",borderRadius:3}));
+ chart("priorityChart","bar",prios,pData,{scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,ticks:{precision:0},grid:{color:"#edf0f5"}}}});
+ const itemRows=D.i.map(item=>{const z=a.filter(x=>x.item===item);const u=sum(z,"units"),r=sum(z,"revenue"),c=sum(z,"cost"),p=sum(z,"profit");return {item,u,r,c,p,m:r?p/r*100:0}}).filter(x=>x.u).sort((x,y)=>y.p-x.p);
+ chart("itemCostChart","bar",itemRows.map(x=>x.item).reverse(),[{label:"Cost",data:itemRows.map(x=>x.c).reverse(),backgroundColor:"#98a2b3",borderRadius:4}],{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{callback:v=>"$"+(v/1000).toFixed(0)+"K"}},y:{grid:{display:false}}}});
+ chart("marginChart","bar",itemRows.map(x=>x.item),[{label:"Profit margin",data:itemRows.map(x=>x.m),backgroundColor:"#8067dc",borderRadius:4}],{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:30,font:{size:9}}},y:{beginAtZero:true,grid:{color:"#edf0f5"},ticks:{callback:v=>v+"%"}}}});
+ $("itemTable").innerHTML="<thead><tr><th>Item type</th><th>Units sold</th><th>Revenue</th><th>Cost</th><th>Profit</th><th>Margin</th></tr></thead><tbody>"+itemRows.map(x=>`<tr><td>${x.item}</td><td>${number(x.u)}</td><td>${money(x.r)}</td><td>${money(x.c)}</td><td>${money(x.p)}</td><td>${pct(x.m)}</td></tr>`).join("")+"</tbody>";
+ $("ordersTable").innerHTML="<thead><tr><th>Order #</th><th>Year</th><th>Region</th><th>Country</th><th>Item type</th><th>Channel</th><th>Priority</th><th>Units</th><th>Revenue</th><th>Cost</th><th>Profit</th></tr></thead><tbody>"+a.map(x=>`<tr><td>${x.id}</td><td>${x.year}</td><td>${x.region}</td><td>${x.country}</td><td>${x.item}</td><td>${x.channel}</td><td>${x.priority}</td><td>${number(x.units)}</td><td>${money(x.revenue)}</td><td>${money(x.cost)}</td><td>${money(x.profit)}</td></tr>`).join("")+"</tbody>";
+}
+document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".panel").forEach(p=>p.hidden=p.id!=="panel-"+btn.dataset.tab);}));
+["region","channel","year"].forEach(id=>$(id).addEventListener("change",render));
+render();
+</script>
+</body>
+</html>
