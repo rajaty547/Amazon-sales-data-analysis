@@ -1,140 +1,161 @@
-# Amazon Sales Analysis Dashboard
+# Amazon Sales Data Analysis
 
-An interactive sales analytics project that explores revenue, costs, profitability, sales channels, regions, and product performance across 100 order records.
+A data analytics project that explores Amazon-style sales records using **Python, Pandas, Matplotlib, Seaborn, Jupyter Notebook, and Power BI**. The project includes exploratory data analysis (EDA), business-focused questions, visualizations, a Power BI report file, and a published interactive web dashboard.
 
-## 🔴 Live Dashboard
+## 🔗 Project Links
 
-**[View the Interactive Amazon Sales Dashboard](https://rajaty547.github.io/Amazon-sales-data-analysis/)**
-
-Explore the dashboard online. Use the region, sales channel, and year filters to analyze different subsets of the data.
+- **[Open the Live Interactive Dashboard](https://rajaty547.github.io/Amazon-sales-data-analysis/)**
+- **[View the GitHub Repository](https://github.com/rajaty547/Amazon-sales-data-analysis)**
 
 ## 📌 Project Overview
 
-The **Amazon Sales Analysis Dashboard** transforms sales records into an interactive visual report. It helps users explore key performance indicators (KPIs), compare revenue across regions and channels, examine product profitability, and review order-level records.
+The goal of this project is to analyze sales performance across regions, countries, item types, sales channels, and order priorities. It examines revenue, costs, profit, units sold, order processing time, and patterns over time to support business-oriented analysis.
 
-The dashboard was built with HTML, CSS, JavaScript, and Chart.js and is published using GitHub Pages.
+The repository contains the original CSV dataset, a Python notebook and its HTML export, a PDF project document, and a Power BI `.pbix` file.
 
-## ✨ Dashboard Features
+## 📁 Project Files
 
-- **KPI cards:** Units sold, total revenue, total cost, total profit, profit margin, and number of orders.
-- **Interactive filters:** Filter the dashboard by region, sales channel, and year.
-- **Regional performance:** Compare revenue across sales regions.
-- **Sales channel analysis:** Explore revenue distribution across online and offline channels.
-- **Product profitability:** Compare profit, revenue, cost, and profit margin by item type.
-- **Sales trends:** Analyze units sold by year.
-- **Country analysis:** Identify the top 10 countries by units sold in the selected view.
-- **Order priority analysis:** Review order counts by priority and sales channel.
-- **Data tables:** Explore item-level summaries and filtered order-level records.
-- **Responsive design:** Dashboard layout adapts to desktop and smaller screens.
-
-## 📊 Key Performance Indicators
-
-The dashboard calculates and displays:
-
-| KPI | Description |
+| File | Description |
 |---|---|
-| Units Sold | Sum of units sold across the selected orders |
-| Total Revenue | Sum of units sold multiplied by unit price |
-| Total Cost | Sum of units sold multiplied by unit cost |
-| Total Profit | Total revenue minus total cost |
-| Profit Margin | Total profit divided by total revenue, expressed as a percentage |
-| Orders | Number of order records matching the selected filters |
+| `Amazon Sales data.csv` | Source dataset used for the analysis |
+| `Analyzing Amazon Sales data.ipynb` | Jupyter Notebook containing data inspection, cleaning demonstrations, analysis, and charts |
+| `Project 1_Analyzing Amazon Sales data.pdf` | PDF project document |
+| `index.html` | Published interactive web dashboard |
+| `README.md` | Project documentation |
 
-> **Note:** The figures shown in the dashboard are calculated from the data embedded in this project. Verify the original dataset's currency and business context before using the values in formal reporting.
+## 📊 Dataset at a Glance
 
-## 🛠️ Tools & Technologies
+The CSV contains **100 records and 14 columns**, with order dates ranging from **May 2010 to May 2017**. The dataset has no missing values in its original form.
 
-- **HTML5** — dashboard structure
-- **CSS3** — styling and responsive layout
-- **JavaScript** — filtering, data aggregation, and interactions
-- **Chart.js** — interactive charts and visualizations
-- **GitHub** — source control and project repository
+Key fields include:
+
+- **Order details:** `Order ID`, `Order Date`, `Ship Date`, `Order Priority`
+- **Market details:** `Region`, `Country`, `Sales Channel`
+- **Product details:** `Item Type`
+- **Sales metrics:** `Units Sold`, `Unit Price`, `Unit Cost`
+- **Financial metrics:** `Total Revenue`, `Total Cost`, `Total Profit`
+
+The records cover 7 regions, 76 countries, 12 item types, and both online and offline sales channels.
+
+## 🧰 Tools & Technologies
+
+- **Python** — analysis and data manipulation
+- **Pandas** — loading, cleaning, grouping, and summarizing data
+- **NumPy** — numerical operations
+- **Matplotlib** — data visualization
+- **Seaborn** — statistical charts
+- **Jupyter Notebook** — analysis workflow
+- **Power BI** — report file (`.pbix`)
+- **HTML, CSS, JavaScript** — published web dashboard
 - **GitHub Pages** — dashboard hosting
 
-## 📈 Visualizations
+## 🔍 Analysis Questions
 
-The dashboard includes these report sections:
+The notebook explores questions such as:
 
-### 1. Overview
-- Revenue by region
-- Revenue mix by sales channel
-- Profit by item type
-- Top 10 countries by units sold
+1. Which regions generate the highest total sales revenue?
+2. What are the average unit prices and unit costs for each item type?
+3. Which country has the highest total profit?
+4. How are order priorities distributed across online and offline sales channels?
+5. What is the average time between order and shipment for each sales channel and country?
+6. Which item types have the highest and lowest total revenue?
+7. How does order priority vary by region and item type?
+8. What is the correlation between unit price and total profit?
+9. Are there monthly revenue patterns in the data?
+10. How do units sold and revenue vary across countries?
+11. Are there outliers in the total cost distribution?
+12. Is there a relationship between units sold and total profit?
 
-### 2. Sales Trends
-- Units sold by year
-- Cost versus profit
-- Revenue by item type
-- Orders by priority and sales channel
+## 📈 Analysis & Visualizations
 
-### 3. Product Analysis
-- Cost by item type
-- Profit margin by item type
-- Item type performance table with units, revenue, cost, profit, and margin
+The Python notebook uses grouped summaries and visualizations, including:
 
-### 4. Data Table
-- Filtered order-level records, including year, region, country, item type, sales channel, priority, units sold, revenue, cost, and profit
+- Revenue by region and country
+- Average unit price and unit cost by item type
+- Total profit by country and item type
+- Order priority distribution by sales channel and region
+- Average order-to-shipment duration
+- Monthly revenue patterns
+- Units sold by country
+- Unit price distribution by item type
+- Total cost outlier exploration using the interquartile range (IQR)
+- Correlation checks between selected sales metrics
 
-## 🗂️ Repository Contents
+## 💡 Key Metrics
 
-The repository includes the following project files:
+The dataset provides the following measures:
 
-- `index.html` — interactive dashboard published through GitHub Pages
-- `Amazon Sales data.csv` — CSV dataset
-- `Analyzing Amazon Sales data.ipynb` — Jupyter notebook for data analysis
-- `Amazon Sales data_Python.pdf` — accompanying PDF document
-- `README.md` — project documentation
+| Metric | Meaning |
+|---|---|
+| Units Sold | Total quantity sold |
+| Total Revenue | Revenue recorded for the order |
+| Total Cost | Cost recorded for the order |
+| Total Profit | Profit recorded for the order |
+| Order Processing Time | Difference between `Ship Date` and `Order Date` |
+| Profit Margin | Total profit divided by total revenue |
 
-## 🚀 Run the Dashboard Locally
+For reference, summing the supplied CSV gives **512,871 units sold**, **137,348,768.31 total revenue**, **93,180,569.91 total cost**, and **44,168,198.40 total profit**. These are totals for the provided 100 records; check the dataset's original currency/context before using them in formal reporting.
+
+## 🚀 Run the Python Analysis
 
 1. Clone the repository:
 
    ```bash
    git clone https://github.com/rajaty547/Amazon-sales-data-analysis.git
-   ```
-
-2. Open the project folder:
-
-   ```bash
    cd Amazon-sales-data-analysis
    ```
 
-3. Open `index.html` in a modern web browser.
+2. Install the Python libraries:
 
-The dashboard loads Chart.js from a CDN, so an internet connection is required for the charts to render.
+   ```bash
+   pip install pandas numpy matplotlib seaborn jupyter
+   ```
 
-## 🌐 Deployment
+3. Start Jupyter Notebook:
 
-This dashboard is hosted using **GitHub Pages**.
+   ```bash
+   jupyter notebook
+   ```
 
-- **Live dashboard:** https://rajaty547.github.io/Amazon-sales-data-analysis/
-- **Source repository:** https://github.com/rajaty547/Amazon-sales-data-analysis/
+4. Open `Analyzing Amazon Sales data.ipynb` and run the cells.
 
-To publish updates, commit changes to the `main` branch and confirm that GitHub Pages is configured to deploy from the repository root.
+Make sure `Amazon Sales data.csv` is in the same working directory as the notebook.
 
-## 📚 Dataset Notes
+## 📊 Open the Power BI Report
 
-The dashboard uses 100 order records embedded in the HTML file. The dashboard contains fields for region, country, item type, sales channel, order priority, year, units sold, unit price, and unit cost.
+1. Download or clone this repository.
+2. Open `Amazon Sales data.pbix` using Microsoft Power BI Desktop.
+3. If prompted, verify the data source path and update it to the location of `Amazon Sales data.csv`.
 
-The dashboard derives revenue, cost, and profit from these fields. The embedded data covers the date range **February 2010 to May 2017**.
+The `.pbix` file is the Power BI report artifact; use Power BI Desktop to inspect or modify it.
 
-## 💡 Learning Outcomes
+## 🌐 Live Web Dashboard
 
-- Building an interactive dashboard with HTML, CSS, and JavaScript
-- Creating charts with Chart.js
-- Calculating and presenting business KPIs
-- Grouping and filtering records for analysis
-- Designing a responsive data visualization interface
-- Publishing a static dashboard with GitHub Pages
+The interactive HTML dashboard is published with GitHub Pages:
+
+**[https://rajaty547.github.io/Amazon-sales-data-analysis/](https://rajaty547.github.io/Amazon-sales-data-analysis/)**
+
+The live dashboard is separate from the downloadable Power BI `.pbix` file. The live link lets visitors view the web version in a browser, while the `.pbix` file can be opened in Power BI Desktop.
+
+## 🎯 Skills Demonstrated
+
+- Data loading, inspection, and cleaning workflow
+- Exploratory data analysis using Pandas
+- Aggregation and grouping for business questions
+- Data visualization with Matplotlib and Seaborn
+- Sales and profitability metric interpretation
+- Date-based analysis and order-to-shipment duration
+- Working with Jupyter Notebook and Power BI report files
+- Publishing a dashboard using GitHub Pages
 
 ## 👤 Author
 
 **Rajat Yadav**
 
-- GitHub: [@rajaty547](https://github.com/rajaty547)
-- Project Repository: [Amazon Sales Data Analysis](https://github.com/rajaty547/Amazon-sales-data-analysis)
-- Live Dashboard: [View Dashboard](https://rajaty547.github.io/Amazon-sales-data-analysis/)
+- **GitHub:** [@rajaty547](https://github.com/rajaty547)
+- **Repository:** [Amazon Sales Data Analysis](https://github.com/rajaty547/Amazon-sales-data-analysis)
+- **Live Dashboard:** [View Interactive Dashboard](https://rajaty547.github.io/Amazon-sales-data-analysis/)
 
 ---
 
-If you find this project useful, consider giving the repository a ⭐.
+If you find this project useful, feel free to ⭐ the repository.
